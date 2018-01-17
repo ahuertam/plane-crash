@@ -1,6 +1,6 @@
 var redGamePiece, blueGamePiece, yellowGamePiece;
 var myScore;
-var upBoundary ,downBoundary,leftBoundary, rightBoundary;
+var upBoundary, downBoundary, leftBoundary, rightBoundary;
 //Game  manager
 function startGame() {
     myGameArea.start();
@@ -16,8 +16,8 @@ function startGame() {
 }
 // Canvas definition
 var myGameArea = {
-    canvas : document.createElement("canvas"),
-    start : function() {
+    canvas: document.createElement("canvas"),
+    start: function() {
         this.canvas.width = 480;
         this.canvas.height = 480;
         this.context = this.canvas.getContext("2d");
@@ -26,10 +26,10 @@ var myGameArea = {
         this.started = false;
         this.interval = setInterval(updateGameArea, 20);
     },
-    clear : function() {
-     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    clear: function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
-    stop : function() {
+    stop: function() {
         clearInterval(this.interval);
         this.clear();
     }
@@ -44,82 +44,88 @@ function component(width, height, color, x, y, type) {
     this.y = y;
     this.speedX = 0;
     this.speedY = 0;
-    this.update = function(){
-      ctx = myGameArea.context;
-      if (this.type == "text") {
-       ctx.font = this.width + " " + this.height;
-       ctx.fillStyle = color;
-       ctx.fillText(this.text, this.x, this.y);
-     }else {
-       ctx.fillStyle = color;
-       ctx.fillRect(this.x, this.y, this.width, this.height);
-     }
+    this.update = function() {
+        ctx = myGameArea.context;
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
     };
-  this.newPos = function() {
+    this.newPos = function() {
         this.x += this.speedX;
         this.y += this.speedY;
     };
-  this.crashWith = function(otherobj) {
-      var myleft = this.x;
-      var myright = this.x + (this.width);
-      var mytop = this.y;
-      var mybottom = this.y + (this.height);
-      var otherleft = otherobj.x;
-      var otherright = otherobj.x + (otherobj.width);
-      var othertop = otherobj.y;
-      var otherbottom = otherobj.y + (otherobj.height);
-      var crash = true;
-      if ((mybottom < othertop) ||
-             (mytop > otherbottom) ||
-             (myright < otherleft) ||
-             (myleft > otherright)) {
-         crash = false;
-      }
-      return crash;
-  };
+    this.crashWith = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+        if ((mybottom < othertop) ||
+            (mytop > otherbottom) ||
+            (myright < otherleft) ||
+            (myleft > otherright)) {
+            crash = false;
+        }
+        return crash;
+    };
 }
 
 // Frame update
 function updateGameArea() {
-  if (redGamePiece.crashWith(blueGamePiece)) {
-          myScore.text = "SCORE: " + 0;
-          alert("BUUUM!! " + myScore.text);
-          restart();
-      } else {
-      myGameArea.clear();// If commented will leave a trail like tron
-      myScore.text="SCORE: " + myGameArea.frameNo;
-      if(this.myGameArea.start.started){ myGameArea.frameNo += 1 ;}
-      myScore.update();
-      // Boundaries
-      upBoundary.update();
-      downBoundary.update();
-      leftBoundary.update();
-      rightBoundary.update();
-      // Planes
-      redGamePiece.newPos();
-      blueGamePiece.newPos();
-      redGamePiece.update();
-      blueGamePiece.update();
-      // blankZone
-      yellowGamePiece.update();// the order does matter
+    if (redGamePiece.crashWith(blueGamePiece)) {
+        myScore.text = "SCORE: " + 0;
+        alert("BUUUM!! " + myScore.text);
+        restart();
+    } else {
+        myGameArea.clear(); // If commented will leave a trail like tron
+        myScore.text = "SCORE: " + myGameArea.frameNo;
+        if (this.myGameArea.start.started) { myGameArea.frameNo += 1; }
+        myScore.update();
+        // Boundaries
+        upBoundary.update();
+        downBoundary.update();
+        leftBoundary.update();
+        rightBoundary.update();
+        // Planes
+        redGamePiece.newPos();
+        blueGamePiece.newPos();
+        redGamePiece.update();
+        blueGamePiece.update();
+        // blankZone
+        yellowGamePiece.update(); // the order does matter
     }
 }
 
 function start() {
-  this.myGameArea.start.started = true;
-  redGamePiece.speedX += 1;
-  blueGamePiece.speedX -= 1;
+    this.myGameArea.start.started = true;
+    redGamePiece.speedX += 1;
+    blueGamePiece.speedX -= 1;
+    document.getElementById("start").style.display = "none";
+    document.getElementById("hold").style.display = "inline";
 }
+
 function restart() {
-  this.myGameArea.start.started = false;
-  redGamePiece.speedX -= 1;
-  blueGamePiece.speedX += 1;
-  myGameArea.frameNo -= 1;
+    this.myGameArea.start.started = false;
+    redGamePiece.speedX -= 1;
+    blueGamePiece.speedX += 1;
+    myGameArea.frameNo -= 1;
     myGameArea.stop();
+    document.getElementById("start").style.display = "inline";
+    document.getElementById("hold").style.display = "none";
     startGame();
 }
+
 function stop() {
-  alert("Buff you saved a Crash, maybe next time you can do it better? " + myScore.text);
-  restart();
+    alert("Buff you saved a Crash, maybe next time you can do it better? " + myScore.text);
+    restart();
 
 }
