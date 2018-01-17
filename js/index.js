@@ -82,7 +82,8 @@ function component(width, height, color, x, y, type) {
 // Frame update
 function updateGameArea() {
   if (redGamePiece.crashWith(blueGamePiece)) {
-          alert("BUUUM");
+          myScore.text = "SCORE: " + 0;
+          alert("BUUUM!! " + myScore.text);
           restart();
       } else {
       myGameArea.clear();// If commented will leave a trail like tron
@@ -118,7 +119,7 @@ function restart() {
     startGame();
 }
 function stop() {
-  alert("Buff you saved a Crash, maybe next time you can do it better?");
+  alert("Buff you saved a Crash, maybe next time you can do it better? " + myScore.text);
   restart();
 
 }
